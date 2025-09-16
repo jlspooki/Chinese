@@ -703,12 +703,13 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 function drawEnemy(e, dt) {
-  // Bobbing
+  // Bobbing animation
   e.bobT += dt * 2;
   const bob = Math.sin(e.bobT) * 2;
 
   ctx.save();
   ctx.globalAlpha = e.alpha;
+
   // Shadow
   ctx.fillStyle = "rgba(0,0,0,0.3)";
   ctx.beginPath();
@@ -725,9 +726,10 @@ function drawEnemy(e, dt) {
   ctx.fill();
   ctx.stroke();
 
-  // Hanzi
+  // Hanzi (with mobile-safe font size)
   ctx.fillStyle = "#e9ecff";
-  ctx.font = `bold ${Math.floor(e.h * 0.6)}px system-ui, sans-serif`;
+  const fontSize = Math.max(20, Math.floor(e.h * 0.6)); // enforce min 20px
+  ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(e.word.hanzi, e.x, e.y + bob);
@@ -748,6 +750,7 @@ function drawEnemy(e, dt) {
 
   if (e.hitFlash > 0) e.hitFlash -= dt;
 }
+
 
 function screenShake() {
   const start = performance.now();
