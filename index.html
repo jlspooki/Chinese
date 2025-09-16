@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>HSK Word Tower Defense</title>
+  <style>
+    :root {
+      --bg: #0f1221;
+      --panel: #171a2e;
+      --accent: #6cf0b5;
+      --accent2: #8bb6ff;
+      --danger: #ff6b6b;
+      --text: #e9ecff;
+      --muted: #9aa3c7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+    header, footer {
+      padding: 10px 14px; background: var(--panel);
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: space-between;
+      position: sticky; top: 0; z-index: 2;
+    }
+    header .left, header .right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 6px 10px; background: #202545; border-radius: 10px; font-weight: 600; }
+    .heart { color: var(--danger); }
+    .btn {
+      background: #22264a; color: var(--text); border: 1px solid #31386b; border-radius: 10px;
+      padding: 8px 12px; font-weight: 700;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: linear-gradient(135deg, #2e335f, #3540a3); border-color: #4b56c0; }
+    .toggle {
+      display: inline-flex; border: 1px solid #31386b; border-radius: 999px; overflow: hidden;
+    }
+    .toggle button {
+      background: transparent; color: var(--muted); border: 0; padding: 8px 12px; font-weight: 700;
+    }
+    .toggle button.active { background: #2b3269; color: white; }
+    main { flex: 1; display: flex; flex-direction: column; }
+    #game {
+      position: relative; flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 8px;
+    }
+    canvas { width: 100%; max-width: 600px; height: 58vh; background: #0a0d1b; border: 1px solid #1f2450; border-radius: 14px; }
+    .ui {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 12px; background: var(--panel);
+      position: sticky; bottom: 0; z-index: 2;
+    }
+    .choice {
+      background: #1a1f3f; border: 1px solid #2a3167; padding: 12px; border-radius: 12px; text-align: center;
+      font-size: 16px; font-weight: 800; color: #eaf0ff;
+    }
+    .choice.correct { outline: 2px solid #4be6a5; background: #123a2a; }
+    .choice.wrong { outline: 2px solid #ff6b6b; background: #3a1a1a; }
+    .choice.locked { opacity: 0.7; pointer-events: none; }
+    .overlay {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(10,12,24,0.75); z-index: 3; padding: 16px;
+    }
+    .card {
+      width: 100%; max-width: 480px; background: #121533; border: 1px solid #2c3473; border-radius: 16px;
+      padding: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .card h1 { margin: 0 0 6px; font-size: 22px; }
+    .card p { margin: 6px 0 12px; color: var(--muted); }
+    .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+    select, .btn, .choice { touch-action: manipulation; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="left">
+      <span class="badge">Score: <span id="score">0</span></span>
+      <span class="badge">Wave: <span id="wave">1</span></span>
+      <span class="badge">Lives: <span id="lives">3</span> <span class="heart">❤</span></span>
+    </div>
+    <div class="right">
+      <div class="toggle" role="tablist" aria-label="Answer mode">
+        <button id="modePinyin" class="active" aria-selected="true">Pinyin</button>
+        <button id="modeEnglish" aria-selected="false">English</button>
+      </div>
+      <select id="levelSelect" aria-label="HSK level">
+        <option value="1" selected>HSK 1</option>
+        <option value="2">HSK 2</option>
+        <option value="3">HSK 3</option>
+      </select>
+      <button id="pauseBtn" class="btn">Pause</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="game">
+      <canvas id="canvas" width="600" height="380"></canvas>
+      <div id="startOverlay" class="overlay">
+        <div class="card">
+          <h1>HSK Word Tower Defense</h1>
+          <p>Stop the characters before they reach your base. Tap the correct answer fast.</p>
+          <div class="row">
+            <div class="toggle" role="tablist" aria-label="Answer mode (start)">
+              <button id="startModePinyin" class="active" aria-selected="true">Pinyin</button>
+              <button id="startModeEnglish" aria-selected="false">English</button>
+            </div>
+            <select id="startLevel">
+              <option value="1" selected>HSK 1</option>
+              <option value="2">HSK 2</option>
+              <option value="3">HSK 3</option>
+            </select>
+          </div>
+          <div class="row">
+            <button id="startBtn" class="btn primary">Start</button>
+          </div>
+          <p style="font-size:12px; opacity:.8;">Tip: Toggle Pinyin/English anytime. Each success speeds up the wave.</p>
+        </div>
+      </div>
+
+      <div id="gameOverOverlay" class="overlay" style="display:none;">
+        <div class="card">
+          <h1>Game Over</h1>
+          <p>Final score: <strong id="finalScore">0</strong></p>
+          <div class="row">
+            <button id="restartBtn" class="btn primary">Play again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui" id="choices"></div>
+  </main>
+
+  <script>
+    // --- Word banks: sample subsets for HSK 1-3 (expandable) ---
+    const WORDS = {
+      1: [
+        { hanzi: "你", pinyin: "nǐ", english: "you" },
+        { hanzi: "好", pinyin: "hǎo", english: "good" },
+        { hanzi: "吗", pinyin: "ma", english: "(question particle)" },
+        { hanzi: "我", pinyin: "wǒ", english: "I; me" },
+        { hanzi: "爱", pinyin: "ài", english: "love" },
+        { hanzi: "学", pinyin: "xué", english: "study; learn" },
+        { hanzi: "中", pinyin: "zhōng", english: "middle; China" },
+        { hanzi: "国", pinyin: "guó", english: "country" },
+        { hanzi: "人", pinyin: "rén", english: "person" },
+        { hanzi: "吃", pinyin: "chī", english: "eat" },
+      ],
+      2: [
+        { hanzi: "帮助", pinyin: "bāngzhù", english: "help" },
+        { hanzi: "因为", pinyin: "yīnwèi", english: "because" },
+        { hanzi: "所以", pinyin: "suǒyǐ", english: "therefore" },
+        { hanzi: "意思", pinyin: "yìsi", english: "meaning" },
+        { hanzi: "问题", pinyin: "wèntí", english: "question; problem" },
+        { hanzi: "告诉", pinyin: "gàosu", english: "tell" },
+      ],
+      3: [
+        { hanzi: "地图", pinyin: "dìtú", english: "map" },
+        { hanzi: "热情", pinyin: "rèqíng", english: "enthusiastic" },
+        { hanzi: "环境", pinyin: "huánjìng", english: "environment" },
+        { hanzi: "提高", pinyin: "tígāo", english: "improve" },
+        { hanzi: "重要", pinyin: "zhòngyào", english: "important" },
+        { hanzi: "练习", pinyin: "liànxí", english: "practice" },
+      ],
+    };
+
+    // --- Game state ---
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
+    const waveEl = document.getElementById("wave");
+    const livesEl = document.getElementById("lives");
+    const startOverlay = document.getElementById("startOverlay");
+    const gameOverOverlay = document.getElementById("gameOverOverlay");
+    const finalScoreEl = document.getElementById("finalScore");
+    const choicesEl = document.getElementById("choices");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const levelSelect = document.getElementById("levelSelect");
+    const modePinyinBtn = document.getElementById("modePinyin");
+    const modeEnglishBtn = document.getElementById("modeEnglish");
+    const startModePinyin = document.getElementById("startModePinyin");
+    const startModeEnglish = document.getElementById("startModeEnglish");
+    const startLevel = document.getElementById("startLevel");
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    let running = false;
+    let paused = false;
+    let mode = "pinyin"; // "pinyin" | "english"
+    let level = 1;
+
+    let score = 0;
+    let lives = 3;
+    let wave = 1;
+
+    let enemies = [];
+    let lastSpawn = 0;
+    let spawnInterval = 1400; // ms
+    let baseSpeed = 45; // px per second
+    let laneY;
+    
+    // New variables to track current target word and choices state
+    let currentTargetWord = null;
+    let choicesLocked = false;
+
+    // --- Utils ---
+    function randChoice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // --- Enemy factory ---
+    function spawnEnemy() {
+      const word = randChoice(WORDS[level]);
+      const size = Math.min(64, Math.max(32, 38 + Math.random() * 18));
+      const hp = 1;
+      const y = laneY + (Math.random() * 14 - 7);
+      enemies.push({
+        x: canvas.width + 10,
+        y,
+        w: size, h: size,
+        speed: baseSpeed * (0.95 + Math.random() * 0.2),
+        word, hp,
+      });
+      
+      // Only build choices if we don't have a current target
+      if (!currentTargetWord) {
+        currentTargetWord = word;
+        buildChoices(word);
+      }
+    }
+
+    // --- Choices UI (4 options, 1 correct) ---
+    function buildChoices(targetWord) {
+      const bank = WORDS[level];
+      const opts = new Set([targetWord]);
+      while (opts.size < 4) opts.add(randChoice(bank));
+      const shuffled = shuffle([...opts]);
+      choicesEl.innerHTML = "";
+      shuffled.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.textContent = mode === "pinyin" ? opt.pinyin : opt.english;
+        btn.onclick = () => {
+          if (choicesLocked) return;
+          
+          const isCorrect = opt === targetWord;
+          if (isCorrect) {
+            choicesLocked = true;
+            btn.classList.add("correct");
+            killFrontMatching(targetWord);
+            setTimeout(() => {
+              btn.classList.remove("correct");
+              choicesLocked = false;
+              currentTargetWord = null;
+              // Build new choices only if we have a new enemy with a word
+              if (enemies.length > 0) {
+                // Find the frontmost enemy to set as new target
+                let frontmostEnemy = enemies.reduce((prev, current) => 
+                  (prev.x < current.x) ? prev : current
+                );
+                currentTargetWord = frontmostEnemy.word;
+                buildChoices(currentTargetWord);
+              }
+            }, 150);
+          } else {
+            btn.classList.add("wrong");
+            shake();
+            setTimeout(() => btn.classList.remove("wrong"), 250);
+          }
+        };
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    // --- Kill the front-most enemy matching the target word ---
+    function killFrontMatching(targetWord) {
+      // Find nearest enemy to base that matches
+      let idx = -1;
+      let minX = Infinity;
+      for (let i = 0; i < enemies.length; i++) {
+        const e = enemies[i];
+        if (e.word === targetWord && e.x < minX) {
+          minX = e.x; idx = i;
+        }
+      }
+      if (idx !== -1) {
+        enemies.splice(idx, 1);
+        score += 10;
+        scoreEl.textContent = score;
+        // Dynamic difficulty
+        if (score % 50 === 0) {
+          wave++;
+          waveEl.textContent = wave;
+          baseSpeed += 8;
+          spawnInterval = Math.max(650, spawnInterval - 90);
+        }
+      }
+    }
+
+    // --- Visual shake on wrong ---
+    function shake() {
+      const start = performance.now();
+      const dur = 200;
+      const originalStyle = canvas.style.transform;
+      function s(t) {
+        const p = (t - start) / dur;
+        if (p >= 1) { canvas.style.transform = originalStyle; return; }
+        const dx = (Math.random() - 0.5) * 10;
+        const dy = (Math.random() - 0.5) * 6;
+        canvas.style.transform = `translate(${dx}px, ${dy}px)`;
+        requestAnimationFrame(s);
+      }
+      requestAnimationFrame(s);
+    }
+
+    // --- Rendering ---
+    function drawBackground() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Ground line (base)
+      ctx.fillStyle = "#22274e";
+      ctx.fillRect(0, laneY + 28, canvas.width, 3);
+      // Base zone
+      ctx.fillStyle = "rgba(255,107,107,0.08)";
+      ctx.fillRect(0, laneY - 10, 70, 50);
+      ctx.strokeStyle = "#ff6b6b";
+      ctx.strokeRect(4, laneY - 8, 64, 46);
+      // Title faint grid
+      ctx.strokeStyle = "rgba(100,120,200,0.08)";
+      for (let x = 0; x < canvas.width; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+    }
+
+    function drawEnemy(e) {
+      // Bubble
+      ctx.fillStyle = "#1b245a";
+      ctx.strokeStyle = "#2e3b86";
+      ctx.lineWidth = 2;
+      const r = 18;
+      roundRect(ctx, e.x - e.w/2, e.y - e.h/2, e.w, e.h, r, true, true);
+
+      // Hanzi
+      ctx.fillStyle = "#e9ecff";
+      ctx.font = `bold ${Math.floor(e.h * 0.6)}px system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(e.word.hanzi, e.x, e.y);
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+      const rr = Math.min(r, w/2, h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+rr, y);
+      ctx.arcTo(x+w, y, x+w, y+h, rr);
+      ctx.arcTo(x+w, y+h, x, y+h, rr);
+      ctx.arcTo(x, y+h, x, y, rr);
+      ctx.arcTo(x, y, x+w, y, rr);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    // --- Game loop ---
+    let lastTime = 0;
+    function loop(ts) {
+      if (!running || paused) return;
+      const dt = lastTime ? (ts - lastTime) / 1000 : 0;
+      lastTime = ts;
+
+      drawBackground();
+
+      // Spawn logic
+      if (ts - lastSpawn > spawnInterval) {
+        spawnEnemy();
+        lastSpawn = ts;
+      }
+
+      // Update enemies
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        const e = enemies[i];
+        e.x -= e.speed * dt;
+
+        drawEnemy(e);
+
+        // Reached base
+        if (e.x - e.w/2 <= 68) {
+          enemies.splice(i, 1);
+          lives -= 1;
+          livesEl.textContent = lives;
+          shake();
+          
+          // If the enemy that reached base was our current target, reset choices
+          if (e.word === currentTargetWord) {
+            currentTargetWord = null;
+            // If there are other enemies, set the frontmost as the new target
+            if (enemies.length > 0) {
+              let frontmostEnemy = enemies.reduce((prev, current) => 
+                (prev.x < current.x) ? prev : current
+              );
+              currentTargetWord = frontmostEnemy.word;
+              buildChoices(currentTargetWord);
+            } else {
+              // Clear choices if no enemies left
+              choicesEl.innerHTML = "";
+            }
+          }
+          
+          if (lives <= 0) {
+            gameOver();
+            return;
+          }
+        }
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    // --- Start / pause / reset ---
+    function startGame() {
+      running = true; paused = false;
+      score = 0; lives = 3; wave = 1;
+      enemies = [];
+      currentTargetWord = null;
+      choicesLocked = false;
+      lastSpawn = 0;
+      baseSpeed = 45;
+      spawnInterval = 1400;
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+      waveEl.textContent = wave;
+      lastTime = 0;
+      resizeCanvas();
+      startOverlay.style.display = "none";
+      gameOverOverlay.style.display = "none";
+      choicesEl.innerHTML = "";
+      requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+      running = false; paused = false;
+      finalScoreEl.textContent = score;
+      gameOverOverlay.style.display = "flex";
+    }
+
+    function togglePause() {
+      if (!running) return;
+      paused = !paused;
+      pauseBtn.textContent = paused ? "Resume" : "Pause";
+      if (!paused) {
+        lastTime = 0;
+        requestAnimationFrame(loop);
+      }
+    }
+
+    // --- Mode / level switches ---
+    function setMode(m) {
+      mode = m;
+      modePinyinBtn.classList.toggle("active", m === "pinyin");
+      modeEnglishBtn.classList.toggle("active", m === "english");
+      // Rebuild choices for current target if exists
+      if (currentTargetWord) {
+        buildChoices(currentTargetWord);
+      }
+    }
+
+    function setLevel(l) {
+      level = l;
+      // Rebuild choices for current target if exists
+      if (currentTargetWord) {
+        buildChoices(currentTargetWord);
+      }
+    }
+
+    // --- Responsive canvas ---
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      // Keep internal resolution scaled to CSS size for crisp fonts
+      canvas.width = Math.floor(rect.width * window.devicePixelRatio);
+      canvas.height = Math.floor(rect.height * window.devicePixelRatio);
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      laneY = Math.floor(canvas.height / (2 * window.devicePixelRatio)) - 10;
+    }
+    window.addEventListener("resize", () => {
+      const wasRunning = running && !paused;
+      resizeCanvas();
+      if (wasRunning) requestAnimationFrame(loop);
+    });
+
+    // --- Wire UI ---
+    pauseBtn.addEventListener("click", togglePause);
+    modePinyinBtn.addEventListener("click", () => setMode("pinyin"));
+    modeEnglishBtn.addEventListener("click", () => setMode("english"));
+    levelSelect.addEventListener("change", (e) => setLevel(Number(e.target.value)));
+    startModePinyin.addEventListener("click", () => {
+      startModePinyin.classList.add("active");
+      startModeEnglish.classList.remove("active");
+      setMode("pinyin");
+    });
+    startModeEnglish.addEventListener("click", () => {
+      startModeEnglish.classList.add("active");
+      startModePinyin.classList.remove("active");
+      setMode("english");
+    });
+    startLevel.addEventListener("change", (e) => {
+      levelSelect.value = e.target.value;
+      setLevel(Number(e.target.value));
+    });
+    startBtn.addEventListener("click", () => {
+      setLevel(Number(startLevel.value));
+      startOverlay.style.display = "none";
+      startGame();
+    });
+    restartBtn.addEventListener("click", () => {
+      gameOverOverlay.style.display = "none";
+      startGame();
+    });
+
+    // Init sizing and show start overlay
+    resizeCanvas();
+  </script>
+</body>
+</html>
