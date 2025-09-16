@@ -170,15 +170,7 @@ select, .btn, .choice { touch-action: manipulation; }
       </div>
     </div>
 
-    <div id="bonusOverlay" class="overlay" style="display:none;" aria-modal="true" role="dialog">
-      <div class="card">
-        <h1>Bonus Round</h1>
-        <p>15 seconds of double points. Enemies spawn faster. Ready?</p>
-        <div class="row">
-          <button id="bonusStartBtn" class="btn primary">Go!</button>
-        </div>
-      </div>
-    </div>
+   
 
     <div id="gameOverOverlay" class="overlay" style="display:none;" aria-modal="true" role="dialog">
       <div class="card">
@@ -268,7 +260,6 @@ const startModePinyin = document.getElementById("startModePinyin");
 const startModeEnglish = document.getElementById("startModeEnglish");
 const startLevel = document.getElementById("startLevel");
 const startBtn = document.getElementById("startBtn");
-const bonusStartBtn = document.getElementById("bonusStartBtn");
 const restartBtn = document.getElementById("restartBtn");
 const toast = document.getElementById("toast");
 const srLive = document.getElementById("srLive");
@@ -309,8 +300,7 @@ let powerups = { freeze: 1, bomb: 1, double: 1 };
 let freezeTimer = 0;
 let doubleTimer = 0;
 
-let inBonus = false;
-let bonusTimer = 0;
+
 
 let lastTime = 0;
 
@@ -648,19 +638,7 @@ function maybeDropPowerup() {
 }
 
 // -------------------------- Bonus round --------------------------
-function pauseForBonus() {
-  inBonus = true;
-  paused = true;
-  bonusOverlay.style.display = "flex";
-}
-function startBonus() {
-  bonusOverlay.style.display = "none";
-  paused = false;
-  bonusTimer = 15; // seconds
-  showToast("Bonus Round!");
-  // Turbo spawns during bonus
-  spawnInterval = Math.max(350, spawnInterval - 250);
-}
+
 
 // -------------------------- Drawing --------------------------
 function drawBackground() {
@@ -783,14 +761,7 @@ function loop(ts) {
       combo = 0; multiplier = 1; comboEl.textContent = `x${multiplier}`;
     }
   }
-  if (inBonus) {
-    bonusTimer -= dt;
-    if (bonusTimer <= 0) {
-      inBonus = false;
-      spawnInterval = Math.min(1200, 900 + wave * 10); // relax a bit after bonus
-      showToast("Bonus Over");
-    }
-  }
+ 
 
   drawBackground();
 
@@ -862,7 +833,6 @@ function startGame() {
   spawnInterval = learnMode ? 1400 : 1100;
   waveGoal = 10; waveKills = 0;
   combo = 0; multiplier = 1; multiplierTimer = 0;
-  inBonus = false; bonusTimer = 0;
   freezeTimer = 0; doubleTimer = 0;
   powerups = { freeze: 1, bomb: 1, double: 1 };
   updatePowerupUI();
@@ -982,11 +952,7 @@ startBtn.addEventListener("click", () => {
   startOverlay.style.display = "none";
   startGame();
 });
-bonusStartBtn.addEventListener("click", () => {
-  startBonus();
-  lastTime = 0;
-  requestAnimationFrame(loop);
-});
+
 restartBtn.addEventListener("click", () => {
   gameOverOverlay.style.display = "none";
   startGame();
