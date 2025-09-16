@@ -542,10 +542,10 @@ function onCorrect(targetWord) {
     spawnInterval = Math.max(600, spawnInterval - 80);
     showToast(`Wave ${wave}!`);
     // Bonus round every 3 waves
-    if (wave % 3 === 0) {
-      pauseForBonus();
-      return;
-    }
+    //if (wave % 3 === 0) {
+      //pauseForBonus();
+      //return;
+    //}
   }
 
   // Particles already triggered in killFrontMatching
