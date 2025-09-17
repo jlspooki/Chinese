@@ -382,38 +382,29 @@ function endScenario() {
   done.innerHTML = `🎉 场景完成！<br><small>Completed: ${s ? s.title : ''}</small>`;
   sceneBox.appendChild(done);
 
-  // Create button container
-const buttonGroup = document.createElement('div');
-buttonGroup.className = 'completion-buttons';
+  const replay = document.createElement('button');
+  replay.className = 'btn';
+  replay.textContent = '重玩本场景 (Replay this scenario)';
+  replay.addEventListener('click', () => {
+    state.currentIndex = 0;
+    renderScene();
+  });
+  sceneBox.appendChild(replay);
 
-/ Button 1: Return to Main Menu
-const btn1 = document.createElement('button');
-btn1.className = 'btn';
-btn1.textContent = '返回主菜单 (Return to Menu)';
-btn1.onclick = returnToMenu;
-buttonGroup.appendChild(btn1);
+  const back = document.createElement('button');
+  back.className = 'btn';
+  back.textContent = '返回主菜单 (Return to Main Menu)';
+  back.addEventListener('click', returnToMenu);
+  sceneBox.appendChild(back);
 
-// Button 2: Replay Scenario
-const btn2 = document.createElement('button');
-btn2.className = 'btn';
-btn2.textContent = '重新本场景 (Replay this Scenario)';
-btn2.onclick = () => {
-  state.currentIndex = 0;
-  renderScene();
-};
-buttonGroup.appendChild(btn2);
-
-// Button 3: Review Flashcards
-const btn3 = document.createElement('button');
-btn3.className = 'btn';
-btn3.textContent = '复习卡片 (Review Flashcards)';
-btn3.onclick = () => {
-  renderFlashcards(state.scenarios[state.currentKey].words);
-};
-buttonGroup.appendChild(btn3);
-
-// Add button group to sceneBox
-sceneBox.appendChild(buttonGroup);
+  const review = document.createElement('button');
+  review.className = 'btn';
+  review.textContent = '复习卡片 (Review Flashcards)';
+  review.addEventListener('click', () => {
+    buildFlashcards(s);
+    renderFlashcard();
+  });
+  sceneBox.appendChild(review);
 
   // Build + render cheat sheet
   if (s) {
@@ -454,6 +445,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
