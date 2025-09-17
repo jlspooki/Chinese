@@ -82,6 +82,7 @@ function startScenario(key) {
   state.currentIndex = 0;
   hide(menuEl);
   show(gameEl);
+  document.getElementById('hskTable').style.display = "none"; // <--- add this
   renderScene();
 }
 
@@ -412,6 +413,7 @@ function returnToMenu() {
   state.currentKey = null;
   state.currentIndex = 0;
   renderMenu();
+  document.getElementById('hskTable').style.display = "block"; // <--- add this
 }
 
 // Events
@@ -432,6 +434,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
