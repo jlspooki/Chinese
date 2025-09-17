@@ -12,6 +12,13 @@
     text-align: center;
   }
 
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+
   h1 {
     margin: 8px 0 12px;
     font-size: 32px;
