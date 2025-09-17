@@ -1,0 +1,74 @@
+{
+  "title": "Doctor Visit Pack",
+  "scenarios": {
+    "doctor_visit": {
+      "title": "看医生 (Visiting the Doctor)",
+      "hsk": [1,2,3],
+      "scenes": [
+        {
+          "npc": { "zh":"医生：你好，请坐。你哪里不舒服？", "pinyin":"Yīshēng: Nǐ hǎo, qǐng zuò. Nǐ nǎlǐ bù shūfu?", "en":"Doctor: Hello, please sit. Where do you feel unwell?", "hsk":2 },
+          "choices": [
+            { "zh":"我头疼。", "pinyin":"Wǒ tóuténg.", "en":"I have a headache.", "hsk":2, "next":1 },
+            { "zh":"我肚子疼。", "pinyin":"Wǒ dùzi téng.", "en":"I have a stomachache.", "hsk":2, "next":2 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：头疼多久了？", "pinyin":"Yīshēng: Tóuténg duōjiǔ le?", "en":"Doctor: How long have you had the headache?", "hsk":2 },
+          "choices": [
+            { "zh":"两天了。", "pinyin":"Liǎng tiān le.", "en":"For two days.", "hsk":2, "next":3 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：肚子疼多久了？", "pinyin":"Yīshēng: Dùzi téng duōjiǔ le?", "en":"Doctor: How long have you had the stomachache?", "hsk":2 },
+          "choices": [
+            { "zh":"一天。", "pinyin":"Yī tiān.", "en":"One day.", "hsk":2, "next":3 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：还有别的症状吗？", "pinyin":"Yīshēng: Hái yǒu bié de zhèngzhuàng ma?", "en":"Doctor: Do you have any other symptoms?", "hsk":3 },
+          "choices": [
+            { "zh":"我有点发烧。", "pinyin":"Wǒ yǒudiǎn fāshāo.", "en":"I have a slight fever.", "hsk":3, "next":4 },
+            { "zh":"没有。", "pinyin":"Méiyǒu.", "en":"No.", "hsk":1, "next":4 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：你吃过药吗？", "pinyin":"Yīshēng: Nǐ chī guò yào ma?", "en":"Doctor: Have you taken any medicine?", "hsk":2 },
+          "choices": [
+            { "zh":"吃过。", "pinyin":"Chī guò.", "en":"Yes, I have.", "hsk":2, "next":5 },
+            { "zh":"没吃过。", "pinyin":"Méi chī guò.", "en":"No, I haven’t.", "hsk":2, "next":5 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：我给你量一下体温。", "pinyin":"Yīshēng: Wǒ gěi nǐ liáng yīxià tǐwēn.", "en":"Doctor: Let me take your temperature.", "hsk":3 },
+          "choices": [
+            { "zh":"好的。", "pinyin":"Hǎo de.", "en":"Okay.", "hsk":1, "next":6 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：你有点发烧，38度。", "pinyin":"Yīshēng: Nǐ yǒudiǎn fāshāo, sānshíbā dù.", "en":"Doctor: You have a slight fever, 38°C.", "hsk":3 },
+          "choices": [
+            { "zh":"严重吗？", "pinyin":"Yánzhòng ma?", "en":"Is it serious?", "hsk":3, "next":7 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：不严重，但要休息。", "pinyin":"Yīshēng: Bù yánzhòng, dàn yào xiūxi.", "en":"Doctor: Not serious, but you need rest.", "hsk":2 },
+          "choices": [
+            { "zh":"我需要吃药吗？", "pinyin":"Wǒ xūyào chī yào ma?", "en":"Do I need medicine?", "hsk":2, "next":8 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：我给你开一些药。", "pinyin":"Yīshēng: Wǒ gěi nǐ kāi yīxiē yào.", "en":"Doctor: I’ll prescribe you some medicine.", "hsk":2 },
+          "choices": [
+            { "zh":"谢谢医生。", "pinyin":"Xièxie yīshēng.", "en":"Thank you, doctor.", "hsk":1, "next":9 }
+          ]
+        },
+        {
+          "npc": { "zh":"医生：一天三次，饭后吃。", "pinyin":"Yī tiān sāncì, fànhòu chī.", "en":"Doctor: Three times a day, after meals.", "hsk":2 },
+          "choices": [
+            { "zh":"好的，我知道了。", "pinyin":"Hǎo de, wǒ zhīdào le.", "en":"Okay, I understand.", "hsk":1, "next":"end" }
+          ]
+        }
+      ]
+    }
+  }
+}
