@@ -1,0 +1,38 @@
+[
+  {
+    "simplified": "我",
+    "pinyin": "wǒ",
+    "meanings": ["I", "me"],
+    "level": 1
+  },
+  {
+    "simplified": "你",
+    "pinyin": "nǐ",
+    "meanings": ["you"],
+    "level": 1
+  },
+  {
+    "simplified": "他",
+    "pinyin": "tā",
+    "meanings": ["he", "him"],
+    "level": 1
+  },
+  {
+    "simplified": "喜欢",
+    "pinyin": "xǐhuan",
+    "meanings": ["to like", "to be fond of"],
+    "level": 2
+  },
+  {
+    "simplified": "医生",
+    "pinyin": "yīshēng",
+    "meanings": ["doctor"],
+    "level": 1
+  },
+  {
+    "simplified": "发烧",
+    "pinyin": "fāshāo",
+    "meanings": ["to have a fever"],
+    "level": 3
+  }
+]
