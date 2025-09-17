@@ -258,6 +258,43 @@ function extractWordsFromLine(line) {
   return words;
 }
 
+// ---- HSK Table ----
+
+function renderHSKTable() {
+  const container = document.getElementById('hskTable');
+  if (!container) return;
+
+  if (!hskVocab || hskVocab.length === 0) {
+    container.innerHTML = "<p>No HSK data loaded.</p>";
+    return;
+  }
+
+  const table = document.createElement('table');
+  table.border = "1";
+  table.cellPadding = "6";
+  table.style.marginTop = "16px";
+  table.innerHTML = `
+    <tr>
+      <th>Word</th>
+      <th>Pinyin</th>
+      <th>English</th>
+      <th>HSK Level</th>
+    </tr>
+    ${hskVocab.map(w => `
+      <tr>
+        <td>${w.simplified}</td>
+        <td>${w.pinyin}</td>
+        <td>${Array.isArray(w.meanings) ? w.meanings.join(', ') : w.meanings}</td>
+        <td>${w.level}</td>
+      </tr>
+    `).join('')}
+  `;
+
+  container.innerHTML = "";
+  container.appendChild(table);
+}
+
+
 function markWordsAsSeen(words) {
   let progress = JSON.parse(localStorage.getItem('progress') || '{}');
   words.forEach(w => {
@@ -372,6 +409,7 @@ filterEl.addEventListener('change', renderMenu);
 hskLevelEl.addEventListener('change', async () => {
   await loadHSK(hskLevelEl.value);
   renderMenu();
+  renderHSKTable()
 });
 
 
@@ -380,7 +418,9 @@ hskLevelEl.addEventListener('change', async () => {
   await loadPacks();
   await loadHSK(hskLevelEl.value); // load initial selection
   renderMenu();
+  renderHSKTable();
 })();
+
 
 
 
