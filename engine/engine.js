@@ -37,15 +37,18 @@ async function loadPacks() {
 }
 
 // Load HSK vocab
-async function loadHSK(level = 'all') {
-  let path;
-  if (level === 'all') {
-    path = './data/hsk.json';        // combined file
+async function loadHSK(level) {
+  if (level === "all") {
+    const [hsk1, hsk2] = await Promise.all([
+      fetch('./data/hsk1.json').then(r => r.json()),
+      fetch('./data/hsk2.json').then(r => r.json())
+    ]);
+    hskVocab = [...hsk1, ...hsk2];
   } else {
-    path = `./data/hsk${level}.json`; // e.g. hsk1.json, hsk2.json
+    hskVocab = await fetch(`./data/hsk${level}.json`).then(r => r.json());
   }
-  hskVocab = await fetch(path).then(r => r.json());
 }
+
 
 // Render menu
 function renderMenu() {
@@ -429,6 +432,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
