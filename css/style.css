@@ -1,13 +1,13 @@
 :root {
-  --bg: #1e1e2f;
-  --panel: #2c2c3c;
-  --accent: #00c2ff;
-  --accent-light: #66e0ff;
-  --text: #f0f0f0;
-  --muted: #a0a0b0;
-  --highlight: #ffd700;
-  --danger: #ff4c4c;
+  --bg: #fdfdfd;
+  --panel: #ffffff;
+  --accent: #ff6f61;
+  --accent-light: #ffa89e;
+  --text: #333333;
+  --muted: #777777;
+  --highlight: #2d9cdb;
   --success: #4caf50;
+  --danger: #e53935;
 }
 
 body {
@@ -16,7 +16,7 @@ body {
   color: var(--text);
   margin: 0;
   padding: 20px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 h1 {
@@ -31,7 +31,7 @@ h1 {
 
 .btn {
   background-color: var(--accent);
-  color: #000;
+  color: #fff;
   border: none;
   border-radius: 6px;
   padding: 10px 14px;
@@ -51,7 +51,7 @@ h1 {
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .toggle {
@@ -83,7 +83,7 @@ select {
   font-weight: bold;
   font-size: 18px;
   margin-bottom: 12px;
-  color: var(--accent-light);
+  color: var(--highlight);
 }
 
 table {
@@ -96,19 +96,19 @@ table {
 
 th, td {
   padding: 10px;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--accent-light);
   text-align: left;
 }
 
 th {
   background-color: var(--accent);
-  color: #000;
+  color: #fff;
 }
 
 tr:nth-child(even) {
-  background-color: #2a2a3a;
+  background-color: #f9f9f9;
 }
 
 tr:hover {
-  background-color: #33334a;
+  background-color: #ffeae6;
 }
