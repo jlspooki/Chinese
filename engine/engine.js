@@ -1,4 +1,4 @@
-// Engine with cheat sheet + flashcards
+// Engine with scenarios + cheat sheet + flashcards + HSK vocab tracking
 
 const state = {
   scenarios: {},      // { key: Scenario }
@@ -15,6 +15,9 @@ const backBtn = document.getElementById('backBtn');
 const filterEl = document.getElementById('filter');
 const gameHeader = document.getElementById('gameHeader');
 
+// HSK vocab
+let hskVocab = [];
+
 // Helpers
 const show = el => el.classList.remove('hidden');
 const hide = el => el.classList.add('hidden');
@@ -25,11 +28,16 @@ async function loadPacks() {
   for (const file of manifest.packs) {
     const pack = await fetch('./packs/' + file).then(r => r.json());
     Object.entries(pack.scenarios).forEach(([key, scenario]) => {
+      scenario.pack = pack.title; // tag scenario with pack title
       state.scenarios[key] = scenario;
     });
   }
 }
 
+// Load HSK vocab
+async function loadHSK() {
+  hskVocab = await fetch('./data/hsk.json').then(r => r.json());
+}
 // Render menu
 function renderMenu() {
   listEl.innerHTML = '';
@@ -42,6 +50,14 @@ function renderMenu() {
     btn.textContent = s.title;
     btn.addEventListener('click', () => startScenario(key));
     listEl.appendChild(btn);
+  });
+
+  // Show HSK progress summary
+  const summary = getProgressSummary();
+  Object.keys(summary).forEach(level => {
+    const div = document.createElement('div');
+    div.textContent = `HSK ${level}: ${summary[level]} words seen`;
+    listEl.appendChild(div);
   });
 
   hide(gameEl);
@@ -133,7 +149,6 @@ function renderScene() {
     sceneBox.appendChild(btn);
   });
 }
-
 // ---- Cheat Sheet Functions ----
 function buildCheatSheet(scenario) {
   const sheet = [];
@@ -223,8 +238,71 @@ function renderFlashcard() {
   });
   sceneBox.appendChild(reveal);
 }
+// ---- HSK Integration ----
+function extractWordsFromLine(line) {
+  const words = [];
+  hskVocab.forEach(entry => {
+    if (line.includes(entry.simplified)) {
+      words.push(entry);
+    }
+  });
+  return words;
+}
 
-// End scenario with cheat sheet + flashcards
+function markWordsAsSeen(words) {
+  let progress = JSON.parse(localStorage.getItem('progress') || '{}');
+  words.forEach(w => {
+    if (!progress[w.simplified]) {
+      progress[w.simplified] = { level: w.level, seen: true };
+    }
+  });
+  localStorage.setItem('progress', JSON.stringify(progress));
+}
+
+function getProgressSummary() {
+  const progress = JSON.parse(localStorage.getItem('progress') || '{}');
+  const summary = {};
+  Object.values(progress).forEach(w => {
+    summary[w.level] = (summary[w.level] || 0) + 1;
+  });
+  return summary;
+}
+
+function renderWordList(sheet) {
+  const allWords = [];
+  sheet.forEach(line => {
+    allWords.push(...extractWordsFromLine(line.zh));
+  });
+
+  // Deduplicate by simplified form
+  const unique = {};
+  allWords.forEach(w => { unique[w.simplified] = w; });
+  const words = Object.values(unique);
+
+  const progress = JSON.parse(localStorage.getItem('progress') || '{}');
+
+  const table = document.createElement('table');
+  table.border = "1";
+  table.cellPadding = "6";
+  table.style.marginTop = "16px";
+  table.innerHTML = `
+    <tr><th>Word</th><th>Pinyin</th><th>English</th><th>HSK</th><th>Status</th></tr>
+    ${words.map(w => {
+      const seen = progress[w.simplified] ? '✅ Seen' : '⭐ New';
+      return `
+        <tr>
+          <td>${w.simplified}</td>
+          <td>${w.pinyin}</td>
+          <td>${Array.isArray(w.meanings) ? w.meanings[0] : w.meanings}</td>
+          <td>${w.level}</td>
+          <td>${seen}</td>
+        </tr>
+      `;
+    }).join('')}
+  `;
+  sceneBox.appendChild(table);
+}
+// End scenario with cheat sheet + flashcards + HSK tracking
 function endScenario() {
   const s = state.scenarios[state.currentKey];
   sceneBox.innerHTML = '';
@@ -262,6 +340,13 @@ function endScenario() {
   if (s) {
     const sheet = buildCheatSheet(s);
     renderCheatSheet(sheet);
+
+    // HSK tracking
+    sheet.forEach(line => {
+      const words = extractWordsFromLine(line.zh);
+      markWordsAsSeen(words);
+    });
+    renderWordList(sheet);
   }
 }
 
@@ -278,5 +363,6 @@ filterEl.addEventListener('change', renderMenu);
 // Bootstrap
 (async function init() {
   await loadPacks();
+  await loadHSK();
   renderMenu();
 })();
