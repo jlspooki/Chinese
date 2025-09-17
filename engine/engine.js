@@ -1,4 +1,4 @@
-// Modular engine with cheat sheet + HSK highlighting
+// Engine with cheat sheet + flashcards
 
 const state = {
   scenarios: {},      // { key: Scenario }
@@ -168,7 +168,63 @@ function renderCheatSheet(sheet) {
   sceneBox.appendChild(table);
 }
 
-// End scenario with cheat sheet
+// ---- Flashcards ----
+let flashcards = [];
+let flashIndex = 0;
+
+function buildFlashcards(scenario) {
+  flashcards = buildCheatSheet(scenario);
+  flashIndex = 0;
+}
+
+function renderFlashcard() {
+  sceneBox.innerHTML = '';
+
+  if (flashIndex >= flashcards.length) {
+    const done = document.createElement('div');
+    done.className = 'line';
+    done.textContent = "✅ All flashcards reviewed!";
+    sceneBox.appendChild(done);
+
+    const back = document.createElement('button');
+    back.className = 'btn';
+    back.textContent = '返回主菜单 (Return to Main Menu)';
+    back.addEventListener('click', returnToMenu);
+    sceneBox.appendChild(back);
+    return;
+  }
+
+  const card = flashcards[flashIndex];
+
+  const front = document.createElement('div');
+  front.className = 'line';
+  front.style.fontSize = '24px';
+  front.style.textAlign = 'center';
+  front.textContent = card.zh;
+  sceneBox.appendChild(front);
+
+  const reveal = document.createElement('button');
+  reveal.className = 'btn';
+  reveal.textContent = 'Show Answer';
+  reveal.addEventListener('click', () => {
+    const back = document.createElement('div');
+    back.className = 'line';
+    back.innerHTML = `<div>${card.pinyin}</div><div>${card.en}</div><div>HSK ${card.hsk}</div>`;
+    sceneBox.appendChild(back);
+
+    const next = document.createElement('button');
+    next.className = 'btn';
+    next.textContent = 'Next Card';
+    next.addEventListener('click', () => {
+      flashIndex++;
+      renderFlashcard();
+    });
+    sceneBox.appendChild(next);
+  });
+  sceneBox.appendChild(reveal);
+}
+
+// End scenario with cheat sheet + flashcards
 function endScenario() {
   const s = state.scenarios[state.currentKey];
   sceneBox.innerHTML = '';
@@ -192,6 +248,15 @@ function endScenario() {
   back.textContent = '返回主菜单 (Return to Main Menu)';
   back.addEventListener('click', returnToMenu);
   sceneBox.appendChild(back);
+
+  const review = document.createElement('button');
+  review.className = 'btn';
+  review.textContent = '复习卡片 (Review Flashcards)';
+  review.addEventListener('click', () => {
+    buildFlashcards(s);
+    renderFlashcard();
+  });
+  sceneBox.appendChild(review);
 
   // Build + render cheat sheet
   if (s) {
