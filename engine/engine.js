@@ -260,7 +260,7 @@ function extractWordsFromLine(line) {
 
 // ---- HSK Table ----
 
-function renderHSKTable() {
+function renderhskTable() {
   const container = document.getElementById('hskTable');
   if (!container) return;
 
@@ -401,7 +401,7 @@ function endScenario() {
       markWordsAsSeen(words);
     });
     renderWordList(sheet);
-    renderHSKTable();
+    renderhskTable();
   }
 }
 
@@ -418,7 +418,7 @@ filterEl.addEventListener('change', renderMenu);
 hskLevelEl.addEventListener('change', async () => {
   await loadHSK(hskLevelEl.value);
   renderMenu();
-  renderHSKTable()
+  renderhskTable()
 });
 
 
@@ -427,8 +427,9 @@ hskLevelEl.addEventListener('change', async () => {
   await loadPacks();
   await loadHSK(hskLevelEl.value); // load initial selection
   renderMenu();
-  renderHSKTable();
+  renderhskTable();
 })();
+
 
 
 
