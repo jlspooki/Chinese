@@ -14,6 +14,8 @@ const sceneBox = document.getElementById('scene-box');
 const backBtn = document.getElementById('backBtn');
 const filterEl = document.getElementById('filter');
 const gameHeader = document.getElementById('gameHeader');
+const hskLevelEl = document.getElementById('hskLevel');
+
 
 // HSK vocab
 let hskVocab = [];
@@ -373,4 +375,5 @@ filterEl.addEventListener('change', renderMenu);
   await loadHSK();
   renderMenu();
 })();
+
 
