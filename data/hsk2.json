@@ -48,7 +48,7 @@
   { "simplified": "去年", "pinyin": "qùnián", "meanings": ["last year"], "level": 2 },
   { "simplified": "日", "pinyin": "rì", "meanings": ["day", "date"], "level": 2 },
   { "simplified": "生日", "pinyin": "shēngrì", "meanings": ["birthday"], "level": 2 },
-  { "simplified": "哥哥", "pinyin": "gēge", "meanings": ["older brother"], "level": 2 }
+  { "simplified": "哥哥", "pinyin": "gēge", "meanings": ["older brother"], "level": 2 },
   { "simplified": "姐姐", "pinyin": "jiějie", "meanings": ["older sister"], "level": 2 },
   { "simplified": "弟弟", "pinyin": "dìdi", "meanings": ["younger brother"], "level": 2 },
   { "simplified": "妹妹", "pinyin": "mèimei", "meanings": ["younger sister"], "level": 2 },
@@ -140,3 +140,4 @@
   { "simplified": "好吃", "pinyin": "hǎochī", "meanings": ["delicious"], "level": 2 },
   { "simplified": "累", "pinyin": "lèi", "meanings": ["tired"], "level": 2 }
 ]
+
