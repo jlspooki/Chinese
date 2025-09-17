@@ -102,4 +102,34 @@
   .hidden {
     display: none;
   }
+
+table {
+  margin: 20px auto;
+  width: 90%;
+  max-width: 800px;
+  border-collapse: collapse;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #fff;
+  text-align: center;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #3b82f6;
+  text-align: center;
+}
+
+th {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f3f4f6;
+}
+
+tr:hover {
+  background-color: #e0e7ff;
+}
+
 </style>
