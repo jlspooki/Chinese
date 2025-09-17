@@ -405,7 +405,6 @@ function endScenario() {
       markWordsAsSeen(words);
     });
     renderWordList(sheet);
-    renderhskTable();
   }
 }
 
@@ -433,6 +432,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
