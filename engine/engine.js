@@ -35,9 +35,16 @@ async function loadPacks() {
 }
 
 // Load HSK vocab
-async function loadHSK() {
-  hskVocab = await fetch('./data/hsk.json').then(r => r.json());
+async function loadHSK(level = 'all') {
+  let path;
+  if (level === 'all') {
+    path = './data/hsk.json';        // combined file
+  } else {
+    path = `./data/hsk${level}.json`; // e.g. hsk1.json, hsk2.json
+  }
+  hskVocab = await fetch(path).then(r => r.json());
 }
+
 // Render menu
 function renderMenu() {
   listEl.innerHTML = '';
@@ -366,3 +373,4 @@ filterEl.addEventListener('change', renderMenu);
   await loadHSK();
   renderMenu();
 })();
+
