@@ -98,7 +98,7 @@
   { "simplified": "水", "pinyin": "shuǐ", "meanings": ["water"], "level": 1 },
   { "simplified": "水果", "pinyin": "shuǐguǒ", "meanings": ["fruit"], "level": 1 },
   { "simplified": "睡觉", "pinyin": "shuìjiào", "meanings": ["to sleep"], "level": 1 },
-  { "simplified": "说", "pinyin": "shuō", "meanings": ["to speak", "to say"], "level": 1 }
+  { "simplified": "说", "pinyin": "shuō", "meanings": ["to speak", "to say"], "level": 1 },
   { "simplified": "四", "pinyin": "sì", "meanings": ["four"], "level": 1 },
   { "simplified": "岁", "pinyin": "suì", "meanings": ["year (of age)"], "level": 1 },
   { "simplified": "他", "pinyin": "tā", "meanings": ["he", "him"], "level": 1 },
@@ -149,3 +149,4 @@
   { "simplified": "坐", "pinyin": "zuò", "meanings": ["to sit"], "level": 1 },
   { "simplified": "做", "pinyin": "zuò", "meanings": ["to do", "to make"], "level": 1 }
 ]
+
