@@ -1147,5 +1147,14 @@
             "tired"
         ],
         "level": 2
+    },
+    { 
+        "simplified": "正在", 
+        "pinyin": "zhèngzài", 
+        "meanings": [
+            "in the middle of (doing something)"
+        ], 
+        "level": 2 
     }
 ]
+
