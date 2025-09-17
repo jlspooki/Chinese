@@ -269,6 +269,8 @@ function renderHSKTable() {
     return;
   }
 
+  const progress = JSON.parse(localStorage.getItem('progress') || '{}');
+
   const table = document.createElement('table');
   table.border = "1";
   table.cellPadding = "6";
@@ -279,20 +281,26 @@ function renderHSKTable() {
       <th>Pinyin</th>
       <th>English</th>
       <th>HSK Level</th>
+      <th>Status</th>
     </tr>
-    ${hskVocab.map(w => `
-      <tr>
-        <td>${w.simplified}</td>
-        <td>${w.pinyin}</td>
-        <td>${Array.isArray(w.meanings) ? w.meanings.join(', ') : w.meanings}</td>
-        <td>${w.level}</td>
-      </tr>
-    `).join('')}
+    ${hskVocab.map(w => {
+      const seen = progress[w.simplified];
+      return `
+        <tr>
+          <td>${w.simplified}</td>
+          <td>${w.pinyin}</td>
+          <td>${Array.isArray(w.meanings) ? w.meanings.join(', ') : w.meanings}</td>
+          <td>${w.level}</td>
+          <td>${seen ? "✅ Seen" : "⭐ New"}</td>
+        </tr>
+      `;
+    }).join('')}
   `;
 
   container.innerHTML = "";
   container.appendChild(table);
 }
+
 
 
 function markWordsAsSeen(words) {
@@ -393,6 +401,7 @@ function endScenario() {
       markWordsAsSeen(words);
     });
     renderWordList(sheet);
+    renderHSKTable();
   }
 }
 
@@ -420,6 +429,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderHSKTable();
 })();
+
 
 
 
