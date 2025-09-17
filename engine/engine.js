@@ -67,11 +67,14 @@ function renderMenu() {
 
   // Show HSK progress summary
   const summary = getProgressSummary();
-  Object.keys(summary).forEach(level => {
-    const div = document.createElement('div');
-    div.textContent = `HSK ${level}: ${summary[level]} words seen`;
-    listEl.appendChild(div);
-  });
+  [1, 2].forEach(level => {
+  const total = hskVocab.filter(w => w.level === parseInt(level)).length;
+  const seen = summary[level] || 0;
+  const div = document.createElement('div');
+  div.textContent = `HSK ${level}: ${seen} words seen out of ${total}`;
+  listEl.appendChild(div);
+});
+
 
   hide(gameEl);
   show(menuEl);
@@ -434,6 +437,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
