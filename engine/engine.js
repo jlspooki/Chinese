@@ -121,12 +121,16 @@ function renderScene() {
   if (!scene) { endScenario(); return; }
 
   gameHeader.textContent = `${s.title} — 场景 ${state.currentIndex + 1} / ${s.scenes.length}`;
-
   sceneBox.innerHTML = '';
-  // NPC line
-  sceneBox.appendChild(createLineBlock(scene.npc.zh, scene.npc.pinyin, scene.npc.en));
 
-  // Choices
+  // Create scene container
+  const container = document.createElement('div');
+  container.className = 'scene-container';
+
+  // Add NPC line
+  container.appendChild(createLineBlock(scene.npc.zh, scene.npc.pinyin, scene.npc.en));
+
+  // Add choices
   scene.choices.forEach(choice => {
     const btn = document.createElement('button');
     btn.className = 'btn';
@@ -163,9 +167,13 @@ function renderScene() {
       }
     });
 
-    sceneBox.appendChild(btn);
+    container.appendChild(btn);
   });
+
+  // Inject container into sceneBox
+  sceneBox.appendChild(container);
 }
+
 // ---- Cheat Sheet Functions ----
 function buildCheatSheet(scenario) {
   const sheet = [];
@@ -437,6 +445,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
