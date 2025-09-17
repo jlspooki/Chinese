@@ -1,4 +1,4 @@
-// Minimal modular engine: loads packs, renders menu + scenes
+// Modular engine with cheat sheet + HSK highlighting
 
 const state = {
   scenarios: {},      // { key: Scenario }
@@ -22,14 +22,9 @@ const hide = el => el.classList.add('hidden');
 // Load packs manifest then packs
 async function loadPacks() {
   const manifest = await fetch('./packs/packs.json').then(r => r.json());
-  // manifest example: { "packs": [ "core-free.json", "travel.json" ] }
   for (const file of manifest.packs) {
     const pack = await fetch('./packs/' + file).then(r => r.json());
-    // Merge scenarios
     Object.entries(pack.scenarios).forEach(([key, scenario]) => {
-      if (state.scenarios[key]) {
-        console.warn(`Duplicate scenario key "${key}" in pack "${pack.title}". Overwriting.`);
-      }
       state.scenarios[key] = scenario;
     });
   }
@@ -139,6 +134,41 @@ function renderScene() {
   });
 }
 
+// ---- Cheat Sheet Functions ----
+function buildCheatSheet(scenario) {
+  const sheet = [];
+  scenario.scenes.forEach(scene => {
+    sheet.push(scene.npc);
+    scene.choices.forEach(choice => sheet.push(choice));
+  });
+  return sheet;
+}
+
+function renderCheatSheet(sheet) {
+  const learnerLevel = filterEl.value === 'all' ? 99 : parseInt(filterEl.value,10);
+
+  const table = document.createElement('table');
+  table.border = "1";
+  table.cellPadding = "6";
+  table.style.marginTop = "16px";
+  table.innerHTML = `
+    <tr><th>Chinese</th><th>Pinyin</th><th>English</th><th>HSK</th></tr>
+    ${sheet.map(line => {
+      const highlight = line.hsk > learnerLevel ? ' style="color:red;font-weight:bold;"' : '';
+      return `
+        <tr${highlight}>
+          <td>${line.zh}</td>
+          <td>${line.pinyin}</td>
+          <td>${line.en}</td>
+          <td>${line.hsk}</td>
+        </tr>
+      `;
+    }).join('')}
+  `;
+  sceneBox.appendChild(table);
+}
+
+// End scenario with cheat sheet
 function endScenario() {
   const s = state.scenarios[state.currentKey];
   sceneBox.innerHTML = '';
@@ -162,6 +192,12 @@ function endScenario() {
   back.textContent = '返回主菜单 (Return to Main Menu)';
   back.addEventListener('click', returnToMenu);
   sceneBox.appendChild(back);
+
+  // Build + render cheat sheet
+  if (s) {
+    const sheet = buildCheatSheet(s);
+    renderCheatSheet(sheet);
+  }
 }
 
 function returnToMenu() {
