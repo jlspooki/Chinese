@@ -1232,5 +1232,15 @@
             "to make"
         ],
         "level": 1
+    },
+    { 
+        "simplified": "再", 
+        "pinyin": "zài", 
+        "meanings": [
+            "again", 
+            "once more"
+        ], 
+        "level": 1 
     }
 ]
+
