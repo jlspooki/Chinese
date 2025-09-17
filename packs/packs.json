@@ -1,6 +1,9 @@
 {
   "packs": [
     "core-free.json",
-    "travel.json"
+    "travel.json",
+    "school.json",
+    "hotel.json",
+    "cafe.json"
   ]
 }
