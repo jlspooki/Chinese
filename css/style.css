@@ -18,6 +18,15 @@
   text-align: center;
 }
 
+#gameHeader {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 20px auto;
+  color: #1e3a8a;
+  max-width: 800px;
+}
+
 
   h1 {
     margin: 8px 0 12px;
