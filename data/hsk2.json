@@ -1149,12 +1149,14 @@
         "level": 2
     },
     { 
-        "simplified": "正在", 
-        "pinyin": "zhèngzài", 
+        "simplified": "路口", 
+        "pinyin": "lùkǒu", 
         "meanings": [
-            "in the middle of (doing something)"
+            "intersection", 
+            "crossing"
         ], 
         "level": 2 
     }
 ]
+
 
