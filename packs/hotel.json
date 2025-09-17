@@ -1,0 +1,30 @@
+{
+  "title": "Hotel Pack",
+  "scenarios": {
+    "checkin": {
+      "title": "在酒店 (At the Hotel)",
+      "hsk": [1,2],
+      "scenes": [
+        {
+          "npc": { "zh":"前台：欢迎光临，请问您有预订吗？", "pinyin":"Qiántái: Huānyíng guānglín, qǐngwèn nín yǒu yùdìng ma?", "en":"Reception: Welcome, do you have a reservation?", "hsk":2 },
+          "choices": [
+            { "zh":"有，我预订了。", "pinyin":"Yǒu, wǒ yùdìng le.", "en":"Yes, I have a reservation.", "hsk":2, "next":1 },
+            { "zh":"没有。", "pinyin":"Méiyǒu.", "en":"No.", "hsk":1, "next":2 }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，请出示护照。", "pinyin":"Hǎo de, qǐng chūshì hùzhào.", "en":"Okay, please show your passport.", "hsk":2 },
+          "choices": [
+            { "zh":"给你。", "pinyin":"Gěi nǐ.", "en":"Here you go.", "hsk":1, "next":"end" }
+          ]
+        },
+        {
+          "npc": { "zh":"没关系，我们有空房。", "pinyin":"Méi guānxi, wǒmen yǒu kòng fáng.", "en":"No problem, we have rooms available.", "hsk":2 },
+          "choices": [
+            { "zh":"好的，谢谢。", "pinyin":"Hǎo de, xièxie.", "en":"Okay, thank you.", "hsk":1, "next":"end" }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "title": "School Pack",
+  "scenarios": {
+    "classroom": {
+      "title": "在教室 (In the Classroom)",
+      "hsk": [1,2],
+      "scenes": [
+        {
+          "npc": { "zh":"老师：请坐下。", "pinyin":"Lǎoshī: Qǐng zuò xià.", "en":"Teacher: Please sit down.", "hsk":1 },
+          "choices": [
+            { "zh":"好的。", "pinyin":"Hǎo de.", "en":"Okay.", "hsk":1, "next":1 }
+          ]
+        },
+        {
+          "npc": { "zh":"你有问题吗？", "pinyin":"Nǐ yǒu wèntí ma?", "en":"Do you have a question?", "hsk":2 },
+          "choices": [
+            { "zh":"没有。", "pinyin":"Méiyǒu.", "en":"No.", "hsk":1, "next":"end" },
+            { "zh":"有问题。", "pinyin":"Yǒu wèntí.", "en":"Yes, I have a question.", "hsk":2, "next":"end" }
+          ]
+        }
+      ]
+    }
+  }
+}

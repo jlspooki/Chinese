@@ -1,0 +1,30 @@
+{
+  "title": "Cafe Pack",
+  "scenarios": {
+    "ordering": {
+      "title": "在咖啡馆 (At the Cafe)",
+      "hsk": [1,2],
+      "scenes": [
+        {
+          "npc": { "zh":"服务员：您要喝什么？", "pinyin":"Fúwùyuán: Nín yào hē shénme?", "en":"Waiter: What would you like to drink?", "hsk":1 },
+          "choices": [
+            { "zh":"我要咖啡。", "pinyin":"Wǒ yào kāfēi.", "en":"I want coffee.", "hsk":1, "next":1 },
+            { "zh":"我要茶。", "pinyin":"Wǒ yào chá.", "en":"I want tea.", "hsk":1, "next":2 }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，一杯咖啡。", "pinyin":"Hǎo de, yī bēi kāfēi.", "en":"Okay, one cup of coffee.", "hsk":1 },
+          "choices": [
+            { "zh":"谢谢。", "pinyin":"Xièxie.", "en":"Thank you.", "hsk":1, "next":"end" }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，一杯茶。", "pinyin":"Hǎo de, yī bēi chá.", "en":"Okay, one cup of tea.", "hsk":1 },
+          "choices": [
+            { "zh":"谢谢。", "pinyin":"Xièxie.", "en":"Thank you.", "hsk":1, "next":"end" }
+          ]
+        }
+      ]
+    }
+  }
+}
