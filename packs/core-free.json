@@ -1,0 +1,56 @@
+{
+  "title": "Core Free Pack",
+  "scenarios": {
+    "restaurant": {
+      "title": "餐厅 (Restaurant)",
+      "hsk": [1,2],
+      "scenes": [
+        {
+          "npc": { "zh":"服务员：你好，请问几位？", "pinyin":"Fúwùyuán: Nǐ hǎo, qǐngwèn jǐ wèi?", "en":"Waiter: Hello, how many people?", "hsk":1 },
+          "choices": [
+            { "zh":"一位。", "pinyin":"Yī wèi.", "en":"One person.", "hsk":1, "next":1 },
+            { "zh":"两位。", "pinyin":"Liǎng wèi.", "en":"Two people.", "hsk":1, "next":2 }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，请跟我来。", "pinyin":"Hǎo de, qǐng gēn wǒ lái.", "en":"Okay, please follow me.", "hsk":1 },
+          "choices": [
+            { "zh":"谢谢。", "pinyin":"Xièxie.", "en":"Thank you.", "hsk":1, "next":"end" }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，请这边坐。", "pinyin":"Hǎo de, qǐng zhè biān zuò.", "en":"Okay, please sit here.", "hsk":1 },
+          "choices": [
+            { "zh":"谢谢。", "pinyin":"Xièxie.", "en":"Thank you.", "hsk":1, "next":"end" }
+          ]
+        }
+      ]
+    },
+    "shopping": {
+      "title": "购物 (Shopping)",
+      "hsk": [1,2],
+      "scenes": [
+        {
+          "npc": { "zh":"店员：你想买什么？", "pinyin":"Diànyuán: Nǐ xiǎng mǎi shénme?", "en":"Shop assistant: What do you want to buy?", "hsk":2 },
+          "choices": [
+            { "zh":"我想买苹果。", "pinyin":"Wǒ xiǎng mǎi píngguǒ.", "en":"I want to buy apples.", "hsk":2, "next":1 },
+            { "zh":"我想买书。", "pinyin":"Wǒ xiǎng mǎi shū.", "en":"I want to buy books.", "hsk":2, "next":2 }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，一斤苹果十块钱。", "pinyin":"Hǎo de, yī jīn píngguǒ shí kuài qián.", "en":"Okay, one jin of apples is 10 kuai.", "hsk":2 },
+          "choices": [
+            { "zh":"太贵了。", "pinyin":"Tài guì le.", "en":"Too expensive.", "hsk":2, "next":"end" },
+            { "zh":"我买两斤。", "pinyin":"Wǒ mǎi liǎng jīn.", "en":"I'll buy two jin.", "hsk":2, "next":"end" }
+          ]
+        },
+        {
+          "npc": { "zh":"好的，谢谢光临。", "pinyin":"Hǎo de, xièxie guānglín.", "en":"Okay, thank you for coming.", "hsk":2 },
+          "choices": [
+            { "zh":"再见。", "pinyin":"Zàijiàn.", "en":"Goodbye.", "hsk":1, "next":"end" }
+          ]
+        }
+      ]
+    }
+  }
+}
