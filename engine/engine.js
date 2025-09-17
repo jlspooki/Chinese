@@ -366,8 +366,14 @@ function returnToMenu() {
 }
 
 // Events
+// Events
 backBtn.addEventListener('click', returnToMenu);
 filterEl.addEventListener('change', renderMenu);
+hskLevelEl.addEventListener('change', async () => {
+  await loadHSK(hskLevelEl.value);
+  renderMenu();
+});
+
 
 // Bootstrap
 (async function init() {
@@ -375,6 +381,7 @@ filterEl.addEventListener('change', renderMenu);
   await loadHSK(hskLevelEl.value); // load initial selection
   renderMenu();
 })();
+
 
 
 
