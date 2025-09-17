@@ -372,8 +372,9 @@ filterEl.addEventListener('change', renderMenu);
 // Bootstrap
 (async function init() {
   await loadPacks();
-  await loadHSK();
+  await loadHSK(hskLevelEl.value); // load initial selection
   renderMenu();
 })();
+
 
 
