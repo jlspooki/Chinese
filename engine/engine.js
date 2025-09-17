@@ -47,6 +47,7 @@ async function loadHSK(level) {
   } else {
     hskVocab = await fetch(`./data/hsk${level}.json`).then(r => r.json());
   }
+  console.log("Loaded HSK", level, "length:", hskVocab.length);
 }
 
 
@@ -432,6 +433,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
