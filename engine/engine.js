@@ -427,6 +427,29 @@ function returnToMenu() {
   show(document.getElementById('hskTable'));
 }
 
+function signup() {
+  auth.createUserWithEmailAndPassword(email.value, password.value)
+    .then(user => alert("Signed up!"))
+    .catch(err => alert(err.message));
+}
+
+function login() {
+  auth.signInWithEmailAndPassword(email.value, password.value)
+    .then(user => checkAccess(user.user))
+    .catch(err => alert(err.message));
+}
+
+function checkAccess(user) {
+  db.collection("users").doc(user.email).get().then(doc => {
+    if (doc.exists && doc.data().paid) {
+      showPremiumContent();
+    } else {
+      showPaywall();
+    }
+  });
+}
+
+
 // Events
 // Events
 backBtn.addEventListener('click', returnToMenu);
@@ -445,6 +468,7 @@ hskLevelEl.addEventListener('change', async () => {
   renderMenu();
   renderhskTable();
 })();
+
 
 
 
